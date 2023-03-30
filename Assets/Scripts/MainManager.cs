@@ -10,6 +10,7 @@ public class MainManager : MonoBehaviour
     public int LineCount = 6;
     public Rigidbody Ball;
 
+    public Text highScoreText;
     public Text ScoreText;
     public GameObject GameOverText;
     
@@ -22,6 +23,14 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if(PlayerPrefs.GetInt("High Score") == 0)
+        {
+            highScoreText.text = ("There is not a high score");
+        }
+        else
+        {
+            highScoreText.text = ("High Score: " + PlayerPrefs.GetString("Score Name") + ", " + PlayerPrefs.GetInt("High Score"));
+        } 
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -57,8 +66,9 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                SceneManager.LoadScene(0);
             }
+
         }
     }
 
@@ -71,6 +81,11 @@ public class MainManager : MonoBehaviour
     public void GameOver()
     {
         m_GameOver = true;
+        if (m_Points > PlayerPrefs.GetInt("High Score"))
+        {
+            PlayerPrefs.SetInt("High Score", m_Points);
+            PlayerPrefs.SetString("Score Name", MenuUIHandler.playerName);
+        }
         GameOverText.SetActive(true);
     }
 }
